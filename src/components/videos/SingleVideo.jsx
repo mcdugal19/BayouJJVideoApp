@@ -40,6 +40,17 @@ const SingleVideo = () => {
       {video !== undefined ? (
         <div className="single-video-page">
           <div className="single-video-container">
+          <div className="iframe-container">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/hnYvfiz2YpM"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
             <span className="single-video-info">
               <h2 className="single-video-name">{video.name}</h2>
               {video.variation ? <h3>{video.variation}</h3> : null}
@@ -53,31 +64,9 @@ const SingleVideo = () => {
                 />
               ) : null}
               <br />
-              <h4>{video.game}</h4>
+              {/* <h4>{video.category}</h4> */}
               <p>{video.description}</p>
-              <h6>
-                {video.inventory > 0
-                  ? `${video.inventory} currently in stock!`
-                  : "Temporarily out of stock!"}
-              </h6>
-              <h5 className="single-video-price">{video.price}</h5>
-              <span className="single-video-add-button">
-                <input
-                  type="number"
-                  min={"1"}
-                  step={"1"}
-                  value={quantity}
-                  onChange={(e) => {
-                    setQuantity(e.target.value);
-                  }}
-                />
-              </span>
             </span>
-            <img
-              className="single-video-page-image"
-              src={video.image}
-              alt={`${video.name} amiibo image`}
-            />
           </div>
           <div className="reviews-container">
             {isLoggedIn ? (
