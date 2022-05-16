@@ -55,4 +55,4 @@ async function fetchVideos() {
   }
 }
 
-module.exports = fetchAmiibos;
+module.exports = fetchVideos;
