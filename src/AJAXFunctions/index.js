@@ -1,5 +1,7 @@
-import { config } from "./Constants";
-const API_URL = config.url;
+// import { config } from "./Constants";
+// const API_URL = config.url;
+const API_URL = "https://"
+const API_KEY = 'AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE'
 
 // These functions help us communicate between the frontend and backend.
 // The order of functions is broken down in groups of components.
