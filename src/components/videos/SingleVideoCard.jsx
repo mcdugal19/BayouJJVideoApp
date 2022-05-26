@@ -6,11 +6,11 @@ import useAuth from "../../hooks/useAuth";
 import Pagination from "./Pagination";
 
 const AllVideos = () => {
-  const { products, searchItems, setSearchItems } = useAuth();
+  const { videos, searchItems, setSearchItems } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    setSearchItems(products);
+    setSearchItems(videos);
   }, []);
 
   return (
@@ -19,7 +19,7 @@ const AllVideos = () => {
         <div className="top-block">
         </div>
       </div>
-      <SearchProducts
+      <SearchVideos
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
@@ -28,7 +28,7 @@ const AllVideos = () => {
           <>
             <Pagination
               pageLimit={5}
-              productLimit={20}
+              videoLimit={20}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
             />
