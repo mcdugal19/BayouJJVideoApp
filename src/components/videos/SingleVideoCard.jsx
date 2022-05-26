@@ -1,7 +1,7 @@
 // This component acts as the container element for the Videos and Search bar elements
 
 import React, { useEffect, useState } from "react";
-import SearchProducts from "./searchVideos";
+import SearchVideos from "./searchVideos";
 import useAuth from "../../hooks/useAuth";
 import Pagination from "./Pagination";
 
