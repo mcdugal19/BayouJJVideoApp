@@ -7,7 +7,7 @@ const fetch = (...args) =>
 
 async function fetchVideos() {
   try {
-    const response = await fetch("https://www.googleapis.com/youtube/v3/videos?part=player&id={videoId}&key=api key");
+    const response = await fetch("https://youtube.googleapis.com/youtube/v3/channels?key=[AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE]");
     const { video } = await response.json();
 
     // modify each returned object to better fit our database table structure
@@ -27,3 +27,4 @@ async function fetchVideos() {
 }
 
 module.exports = fetchVideos;
+
