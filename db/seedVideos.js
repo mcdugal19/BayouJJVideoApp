@@ -5,7 +5,7 @@ const fetch = (...args) =>
  * Fetch request from YouTube API to seed our products table
  */
 
-async function fetchVideos() {
+async function fetchTechniques() {
   try {
     const response = await fetch("https://youtube.googleapis.com/youtube/v3/channels?key=[AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE]");
     const { video } = await response.json();
@@ -26,5 +26,5 @@ async function fetchVideos() {
   }
 }
 
-module.exports = fetchVideos;
+module.exports = fetchTechniques;
 

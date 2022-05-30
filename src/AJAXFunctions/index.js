@@ -1,4 +1,4 @@
-// import { config } from "./Constants";
+import { config } from "./Constants";
 // const API_URL = config.url;
 const API_URL = "https://"
 const API_KEY = 'AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE'
@@ -10,17 +10,17 @@ const API_KEY = 'AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE'
 // 3. Cart & Orders
 // 4. Reviews
 
-// ******** PRODUCTS *************/
+// ******** VIDEOS *************/
 
-// export async function fetchAllProducts() {
-//   try {
-//     const response = await fetch(`${API_URL}/products`);
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+export async function fetchAllVideos() {
+  try {
+    const response = await fetch(`${API_URL}/videos`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // export async function fetchAllProductsByGame(game) {
 //   try {
@@ -96,61 +96,61 @@ const API_KEY = 'AIzaSyCHpVKlfkBVj7M7UoRpzDDWQODS5B7GWeE'
 
 //****** USER focused request functions *****/
 
-// export async function getMe() {
-//   try {
-//     const response = await fetch(`${API_URL}/users/me`);
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+export async function getMe() {
+  try {
+    const response = await fetch(`${API_URL}/users/me`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-// export async function loginUser(username, password) {
-//   try {
-//     const response = await fetch(`${API_URL}/users/login`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         username,
-//         password,
-//       }),
-//     });
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function loginUser(username, password) {
+  try {
+    const response = await fetch(`${API_URL}/users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-// export async function registerUser(username, password, email) {
-//   try {
-//     const response = await fetch(`${API_URL}/users/register`, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         username,
-//         password,
-//         email,
-//       }),
-//     });
+export async function registerUser(username, password, email) {
+  try {
+    const response = await fetch(`${API_URL}/users/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+      }),
+    });
 
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-// export async function logoutUser() {
-//   try {
-//     const response = await fetch(`${API_URL}/users/logout`);
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function logoutUser() {
+  try {
+    const response = await fetch(`${API_URL}/users/logout`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // export async function getAllUsers() {
 //   try {

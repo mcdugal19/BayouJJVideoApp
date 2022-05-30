@@ -35,17 +35,26 @@ async function createUser({ username, password, email }) {
 
     // remove password before returning user object to API, add empty cart to facilitate frontend functionality
     delete user.password;
-    user.cart = [];
+    // user.cart = [];
     return user;
   } catch (error) {
     console.error("Problem creating user", error);
   }
 }
 
-// original SQL query for getting req.user in API, now used as a shell for getUserWithCart to ensure a user's cart is available on login
+// SQL query for getting req.user by id
 async function getUserById(id) {
   try {
-    return await getUserWithCart(id);
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      SELECT * FROM users
+      WHERE id = $1;
+      `,
+      [id]
+    )
+    return user;
   } catch (error) {
     console.error("Problem getting user by id", error);
   }
@@ -92,7 +101,7 @@ async function getUser({ username, password }) {
         );
 
         // return optimized user object with attached cart, using the user ID from above SQL query
-        return await getUserWithCart(user.id);
+        return await getUserById(user.id);
       } else {
         throw new Error("Passwords did not match...");
       }
@@ -106,13 +115,13 @@ async function getUser({ username, password }) {
 
 // require delete functions for dependent tables before deleting user in below function
 const { deleteReviewsByUserId } = require("./reviews");
-const { clearUserCart } = require("./cart");
+// const { clearUserCart } = require("./cart");
 
 // SQL queries to delete dependent table entries before deleting user
 async function deleteUser(id) {
   try {
     const reviews = await deleteReviewsByUserId(id);
-    const cart = await clearUserCart(id);
+    // const cart = await clearUserCart(id);
     const {
       rows: [user],
     } = await client.query(
@@ -171,132 +180,132 @@ async function updateUser(fields = {}) {
 }
 
 // maps over rows from next function to add cart and order information to user object
-async function mapOverUserRows(rows, id) {
-  let user = {};
-  // adding cart property to user object
-  for (let row of rows) {
-    if (!user.id) {
-      user = {
-        id: row.id,
-        username: row.username,
-        email: row.email,
-        isAdmin: row.isAdmin,
-        cart: [],
-      };
-      if (row.productId) {
-        user.cart.push({
-          id: row.productId,
-          name: row.name,
-          variation: row.variation,
-          game: row.game,
-          image: row.image,
-          description: row.description,
-          price: row.price,
-          quantity: row.quantity,
-        });
-      }
-    } else {
-      user.cart.push({
-        id: row.productId,
-        name: row.name,
-        variation: row.variation,
-        game: row.game,
-        image: row.image,
-        description: row.description,
-        price: row.price,
-        quantity: row.quantity,
-      });
-    }
-  }
+// async function mapOverUserRows(rows, id) {
+//   let user = {};
+//   // adding cart property to user object
+//   for (let row of rows) {
+//     if (!user.id) {
+//       user = {
+//         id: row.id,
+//         username: row.username,
+//         email: row.email,
+//         isAdmin: row.isAdmin,
+//          cart: [],
+//       };
+//       if (row.videoId) {
+//         user.cart.push({
+//           id: row.productId,
+//           name: row.name,
+//           variation: row.variation,
+//           game: row.game,
+//           image: row.image,
+//           description: row.description,
+//           price: row.price,
+//           quantity: row.quantity,
+//         });
+//       }
+//     } else {
+//       user.cart.push({
+//         id: row.productId,
+//         name: row.name,
+//         variation: row.variation,
+//         game: row.game,
+//         image: row.image,
+//         description: row.description,
+//         price: row.price,
+//         quantity: row.quantity,
+//       });
+//     }
+//   }
 
-  // get user's order information
-  const orderRows = await getUserWithOrders(id);
-  user.orders = [];
-  // add order information to orders property
-  for (let orderRow of orderRows) {
-    if (orderRow.productId) {
-      user.orders.push({
-        id: orderRow.productId,
-        name: orderRow.name,
-        variation: orderRow.variation,
-        game: orderRow.game,
-        image: orderRow.image,
-        description: orderRow.description,
-        price: orderRow.price,
-        quantity: orderRow.quantity,
-      });
-    } else {
-      user.orders = [];
-    }
-  }
-  return user;
-}
+//   // get user's order information
+//   const orderRows = await getUserWithOrders(id);
+//   user.orders = [];
+//   // add order information to orders property
+//   for (let orderRow of orderRows) {
+//     if (orderRow.productId) {
+//       user.orders.push({
+//         id: orderRow.productId,
+//         name: orderRow.name,
+//         variation: orderRow.variation,
+//         game: orderRow.game,
+//         image: orderRow.image,
+//         description: orderRow.description,
+//         price: orderRow.price,
+//         quantity: orderRow.quantity,
+//       });
+//     } else {
+//       user.orders = [];
+//     }
+//   }
+//   return user;
+// }
 
 // SQL query to get optimized user object with cart items attached for frontend functionality
-async function getUserWithCart(id) {
-  try {
-    const { rows } = await client.query(
-      `
-      SELECT users.id,
-        users.username,
-        users.email,
-        users."isAdmin",
-        products.id AS "productId",
-        products.name,
-        products.variation,
-        products.game,
-        products.image,
-        products.description,
-        products.price,
-        cart.quantity
-      FROM users
-      LEFT JOIN cart
-      ON users.id=cart."userId"
-      LEFT JOIN products
-      ON cart."productId"=products.id
-      WHERE users.id=$1;
-    `,
-      [id]
-    );
+// async function getUserWithCart(id) {
+//   try {
+//     const { rows } = await client.query(
+//       `
+//       SELECT users.id,
+//         users.username,
+//         users.email,
+//         users."isAdmin",
+//         products.id AS "productId",
+//         products.name,
+//         products.variation,
+//         products.game,
+//         products.image,
+//         products.description,
+//         products.price,
+//         cart.quantity
+//       FROM users
+//       LEFT JOIN cart
+//       ON users.id=cart."userId"
+//       LEFT JOIN products
+//       ON cart."productId"=products.id
+//       WHERE users.id=$1;
+//     `,
+//       [id]
+//     );
 
-    // map over returned rows to add cart to user, and pull in order information
-    return await mapOverUserRows(rows, id);
-  } catch (error) {
-    console.error("Problem getting user with cart...", error);
-  }
-}
+//     // map over returned rows to add cart to user, and pull in order information
+//     return await mapOverUserRows(rows, id);
+//   } catch (error) {
+//     console.error("Problem getting user with cart...", error);
+//   }
+//}
 
 // SQL query used in the above mapping function used to add orders information to user object
-async function getUserWithOrders(id) {
-  try {
-    const { rows } = await client.query(
-      `
-      SELECT users.id,
-        users.username,
-        users.email,
-        users."isAdmin",
-        products.id AS "productId",
-        products.name,
-        products.variation,
-        products.game,
-        products.image,
-        products.description,
-        products.price,
-        users_orders.quantity
-      FROM users
-      LEFT JOIN users_orders
-      ON users.id=users_orders."userId"
-      LEFT JOIN products
-      ON users_orders."productId"=products.id
-      WHERE users.id=$1;
-    `,
-      [id]
-    );
-    return rows;
-  } catch (error) {
-    console.error("Problem getting user with cart...", error);
-  }
-}
+// async function getUserWithOrders(id) {
+//   try {
+//     const { rows } = await client.query(
+//       `
+//       SELECT users.id,
+//         users.username,
+//         users.email,
+//         users."isAdmin",
+//         products.id AS "productId",
+//         products.name,
+//         products.variation,
+//         products.game,
+//         products.image,
+//         products.description,
+//         products.price,
+//         users_orders.quantity
+//       FROM users
+//       LEFT JOIN users_orders
+//       ON users.id=users_orders."userId"
+//       LEFT JOIN products
+//       ON users_orders."productId"=products.id
+//       WHERE users.id=$1;
+//     `,
+//       [id]
+//     );
+//     return rows;
+//   } catch (error) {
+//     console.error("Problem getting user with cart...", error);
+//   }
+// }
 
 // SQL query used to check if a user with a specified email already exists when creating a new user
 async function getUserByEmail(email) {

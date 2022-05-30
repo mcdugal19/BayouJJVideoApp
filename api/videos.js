@@ -1,42 +1,39 @@
 const express = require("express");
-const productsRouter = express.Router();
-const { Products } = require("../db");
+const videosRouter = express.Router();
+const { Videos } = require("../db");
 const { adminRequired } = require("./utils");
 
-// Route that sends back product information from every product.
-productsRouter.get("/", async (req, res, next) => {
+// Route that sends back product information from every video.
+videosRouter.get("/", async (req, res, next) => {
   try {
-    const products = await Products.getAllProducts();
-    res.send(products);
+    const videos = await Videos.getAllVideos();
+    res.send(videos);
   } catch (error) {
     next(error);
   }
 });
 
 // Admin only route that will add a new product to the database. Sends back success message / product info.
-productsRouter.post("/", adminRequired, async (req, res, next) => {
-  const { productObj } = req.body;
-  const { name, variation, game, image, description, price, inventory } =
-    productObj;
-  if (!name || !price || !inventory) {
+videosRouter.post("/", adminRequired, async (req, res, next) => {
+  const { videoObj } = req.body;
+  const { name, variation, image, description} =
+    videoObj;
+  if (!name || !description) {
     next({
       name: "RequiredFields",
       message:
-        "Products must at least have a name, price, and inventory amount.",
+        "Videos must at least have a name, and description.",
     });
   } else {
     try {
-      const product = await Products.createProduct({
+      const video = await Videos.createVideo({
         name,
         variation,
-        game,
         image,
         description,
-        price,
-        inventory,
       });
 
-      res.send({ message: "Successfully added product!", product });
+      res.send({ message: "Successfully added video!", video });
     } catch (error) {
       next(error);
     }
@@ -44,43 +41,40 @@ productsRouter.post("/", adminRequired, async (req, res, next) => {
 });
 
 // Admin only route to update a specific product's information.
-productsRouter.patch("/:productId", adminRequired, async (req, res, next) => {
-  const { productId } = req.params;
-  const { name, variation, game, image, description, price, inventory } =
+videosRouter.patch("/:videoId", adminRequired, async (req, res, next) => {
+  const { videoId } = req.params;
+  const { name, variation, image, description } =
     req.body;
 
   // build update object
-  const updateObj = { id: productId };
+  const updateObj = { id: videoId };
   updateObj.name = name;
   updateObj.variation = variation;
-  updateObj.game = game;
   updateObj.image = image;
   updateObj.description = description;
-  updateObj.price = price;
-  updateObj.inventory = inventory;
 
   try {
-    const product = await Products.updateProduct(updateObj);
+    const video = await Videos.updateVideo(updateObj);
 
-    res.send({ message: "Successfully updated product!", product });
+    res.send({ message: "Successfully updated video!", video });
   } catch (error) {
     next(error);
   }
 });
 
 // Admin only route to delete a specific product from the database.
-productsRouter.delete("/:productId", adminRequired, async (req, res, next) => {
-  const { productId } = req.params;
+videosRouter.delete("/:videoId", adminRequired, async (req, res, next) => {
+  const { videoId } = req.params;
   try {
-    const product = await Products.deleteProduct(productId);
+    const video = await Videos.deleteVideo(videoId);
 
     res.send({
-      message: "Product successfully deleted from the database.",
-      product,
+      message: "Video successfully deleted from the database.",
+      video,
     });
   } catch (error) {
     next(error);
   }
 });
 
-module.exports = productsRouter;
+module.exports = videosRouter;

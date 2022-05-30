@@ -7,7 +7,7 @@ import { loginUser } from "../AJAXFunctions";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
-  const { setUser, setIsLoggedIn, setCart } = useAuth();
+  const { setUser, setIsLoggedIn} = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   let navigate = useNavigate();

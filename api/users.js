@@ -55,7 +55,7 @@ usersRouter.post("/register", async (req, res, next) => {
       httpOnly: true,
       signed: true,
     });
-    res.send({ user, message: `Welcome to Amiibay, ${user.username}!` });
+    res.send({ user, message: `Welcome to Bayou Jiu Jitsu, ${user.username}!` });
   } catch (error) {
     next(error);
   }

@@ -1,5 +1,5 @@
-const { client, Videos, User, Reviews } = require("./");
-const fetchVideos = require("./seedVideos");
+const { client, Videos, User } = require("./");
+const fetchTechniques = require("./seedVideos");
 
 async function buildTables() {
   try {
@@ -7,8 +7,8 @@ async function buildTables() {
 
     await client.query(`
     DROP TABLE IF EXISTS reviews;
-    DROP TABLE IF EXISTS users;
     DROP TABLE IF EXISTS videos;
+    DROP TABLE IF EXISTS users;
     
     CREATE TABLE users(
       id SERIAL PRIMARY KEY,
@@ -21,23 +21,18 @@ async function buildTables() {
     CREATE TABLE videos( 
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      variation VARCHAR(255),
-      game VARCHAR(255),
       image VARCHAR(255),
       description VARCHAR(255),
-      price MONEY NOT NULL,
-      inventory INTEGER NOT NULL
     );
 
     CREATE TABLE reviews(
       id SERIAL PRIMARY KEY,
-      "productId" INTEGER REFERENCES products(id),
+      "videoId" INTEGER REFERENCES videos(id),
       "userId" INTEGER REFERENCES users(id),
       title VARCHAR(255) NOT NULL,
       post VARCHAR(255) NOT NULL,
       rating INTEGER DEFAULT null
     );
-
     `);
   } catch (error) {
     throw error;
@@ -48,14 +43,14 @@ async function populateInitialData() {
   console.log("Seeding database...");
   console.log("Seeding videos...");
   try {
-    const videos = await fetchVideos();
+    const techniques = await fetchTechniques();
     const videos = await Promise.all(
-      videos.map((video) => {
-        const video = Videos.createVideo(video);
+      techniques.map((technique) => {
+        const video = Videos.createVideo(technique);
         return video;
       })
     );
-    if (videos.length > 0) {
+    if(videos.length > 0) {
       console.log("Seeded videos!");
     }
 
