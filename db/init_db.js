@@ -41,7 +41,7 @@ async function buildTables() {
 
 async function populateInitialData() {
   console.log("Seeding database...");
-  console.log("Seeding videos...");
+//   console.log("Seeding videos...");
   try {
     const techniques = await fetchTechniques();
     const videos = await Promise.all(
